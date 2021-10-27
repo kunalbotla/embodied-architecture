@@ -1,9 +1,9 @@
-// Wire Master Writer
+// Wire Slave Receiver
 // by Nicholas Zambetti <http://www.zambetti.com>
 
 // Demonstrates use of the Wire library
-// Writes data to an I2C/TWI slave device
-// Refer to the "Wire Slave Receiver" example for use with this
+// Receives data as an I2C/TWI slave device
+// Refer to the "Wire Master Writer" example for use with this
 
 // Created 29 March 2006
 
@@ -21,21 +21,15 @@ void setup()
   pinMode(10, OUTPUT);
   pinMode(9, OUTPUT);  // sets the pin ouputs
   
-  Wire.begin(); // join i2c bus (address optional for master)
+  Wire.begin(4);                // join i2c bus with address #4
+  Wire.onReceive(receiveEvent); // register event
+  Serial.begin(9600);           // start serial for output
 }
 
 byte x = 0;
 
 void loop()
 {
-  Wire.beginTransmission(4);  // transmit to device #4
-  Wire.write("x is ");        // sends five bytes
-  Wire.write(x);              // sends one byte  
-  Wire.endTransmission();     // stop transmitting
-
-  x++;
-  delay(500);
-
   digitalWrite(13, HIGH); // A on
   delay(1000);            // 
   digitalWrite(13, LOW);  // A off
@@ -52,4 +46,16 @@ void loop()
   digitalWrite(9, HIGH);  // E on
   delay(1000);            // 
   digitalWrite(9, LOW);   // E off
+}
+
+// function that executes whenever data is received from master
+// this function is registered as an event, see setup()
+void receiveEvent(int howMany)
+{
+  while(1 < Wire.available()) // loop through all but the last
+  {
+    float beatsPerMinute = Wire.read();    // receive byte as an integer
+    Serial.println(beatsPerMinute);         // print the integer
+  }
+  
 }
