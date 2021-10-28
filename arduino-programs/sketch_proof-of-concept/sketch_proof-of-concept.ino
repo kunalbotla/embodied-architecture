@@ -3,7 +3,7 @@ void setup() {
   pinMode(11, OUTPUT);
   pinMode(10, OUTPUT);
   pinMode(9, OUTPUT);
-  pinMode(9, OUTPUT);  // sets the pin ouputs
+  pinMode(8, OUTPUT);  // sets the pin ouputs
 }
 
 void loop() {
