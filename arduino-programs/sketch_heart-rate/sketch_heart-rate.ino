@@ -1,27 +1,5 @@
-/*
-  Optical Heart Rate Detection (PBA Algorithm) using the MAX30105 Breakout
-  By: Nathan Seidle @ SparkFun Electronics
-  Date: October 2nd, 2016
-  https://github.com/sparkfun/MAX30105_Breakout
 
-  This is a demo to show the reading of heart rate or beats per minute (BPM) using
-  a Penpheral Beat Amplitude (PBA) algorithm.
-
-  It is best to attach the sensor to your finger using a rubber band or other tightening
-  device. Humans are generally bad at applying constant pressure to a thing. When you
-  press your finger against the sensor it varies enough to cause the blood in your
-  finger to flow differently which causes the sensor readings to go wonky.
-
-  Hardware Connections (Breakoutboard to Arduino):
-  -5V = 5V (3.3V is allowed)
-  -GND = GND
-  -SDA = A4 (or SDA)
-  -SCL = A5 (or SCL)
-  -INT = Not connected
-
-  The MAX30105 Breakout can handle 5V or 3.3V I2C logic. We recommend powering the board with 5V
-  but it will also run at 3.3V.
-*/
+// HR monitor & data write
 
 #include <Wire.h>
 #include "MAX30105.h"
@@ -55,7 +33,7 @@ void setup()
   particleSensor.setPulseAmplitudeRed(0x0A); //Turn Red LED to low to indicate sensor is running
   particleSensor.setPulseAmplitudeGreen(0); //Turn off Green LED
 
-  Wire.begin(); // join i2c bus (address optional for master)
+  Wire.begin(1); // join i2c bus (address optional for master)
 }
 
 byte x = 0;
@@ -97,10 +75,9 @@ void loop()
 
   Serial.println();
 
-  Wire.beginTransmission(4); // transmit to device #4
-  Wire.write(beatsPerMinute);   // sends one byte  
+  Wire.beginTransmission(0); // transmit to device #4
+  Wire.write(beatAvg);   // sends one byte  
   Wire.endTransmission();    // stop transmitting
 
   x++;
-  delay(500);
 }
